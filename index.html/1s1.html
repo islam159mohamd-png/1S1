@@ -1,0 +1,416 @@
+﻿<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>منصة ثانوية الزيانية الرسمية | 1S1</title>
+    <style>
+        /* التنسيق العام وسمات الهيبة */
+        body {
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            background: linear-gradient(rgba(10, 31, 64, 0.9), rgba(10, 31, 64, 0.9)), url('https://unsplash.com') no-repeat center center fixed;
+            background-size: cover;
+            margin: 0;
+            padding: 20px;
+            color: #fff;
+        }
+
+        /* شاشة الدخول */
+        #loginOverlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, #1a3a6c, #0a1f40);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+
+        .login-box {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 50px;
+            border-radius: 20px;
+            text-align: center;
+            backdrop-filter: blur(20px);
+            border: 1px solid #f1c40f;
+            width: 350px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+        }
+
+        .login-input {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid #f1c40f;
+            color: #fff;
+            padding: 12px;
+            width: 100%;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 18px;
+            outline: none;
+        }
+
+        #errorMsg {
+            color: #e74c3c;
+            display: none;
+            font-weight: bold;
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+
+        /* المحتوى الرئيسي */
+        #mainContent {
+            display: none;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: auto;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 40px;
+            border-radius: 25px;
+            border: 1px solid rgba(241, 196, 15, 0.3);
+            backdrop-filter: blur(20px);
+            box-shadow: 0 25px 60px rgba(0,0,0,0.4);
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        h1 {
+            color: #f1c40f;
+            font-size: 3.5em;
+            margin: 0;
+            text-shadow: 0 0 20px rgba(241, 196, 15, 0.3);
+        }
+
+        .class-badge {
+            background: #f1c40f;
+            color: #0a1f40;
+            padding: 5px 30px;
+            border-radius: 5px;
+            font-weight: bold;
+            display: inline-block;
+            margin-top: 10px;
+        }
+
+        /* الأزرار والتحكم */
+        .controls-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .btn {
+            padding: 10px 18px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            border: none;
+            transition: 0.3s;
+            margin: 2px;
+        }
+
+        .btn-print {
+            background: #f1c40f;
+            color: #0a1f40;
+        }
+
+        .btn-add {
+            background: #27ae60;
+            color: white;
+        }
+
+        .btn-edit {
+            background: #3498db;
+            color: white;
+        }
+
+        .btn-save {
+            background: #f39c12;
+            color: white;
+        }
+
+        .btn-del {
+            background: #e74c3c;
+            color: white;
+        }
+
+        .section {
+            background: rgba(255, 255, 255, 0.03);
+            margin-top: 35px;
+            padding: 25px;
+            border-radius: 15px;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        h2 {
+            color: #f1c40f;
+            border-right: 5px solid #f1c40f;
+            padding-right: 15px;
+        }
+
+        /* الجداول */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            border-radius: 12px;
+            overflow: hidden;
+            margin-top: 15px;
+        }
+
+        th, td {
+            padding: 15px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        th {
+            background: rgba(241, 196, 15, 0.15);
+            color: #f1c40f;
+        }
+
+        .day-column {
+            background: rgba(241, 196, 15, 0.25);
+            color: #fff;
+            font-weight: bold;
+            width: 110px;
+        }
+
+        .edit-input {
+            background: rgba(255,255,255,0.2);
+            border: 1px solid #f1c40f;
+            color: white;
+            padding: 5px;
+            border-radius: 4px;
+            width: 80%;
+            text-align: center;
+            outline: none;
+        }
+
+        .footer-link {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+
+            .footer-link a {
+                color: #f1c40f;
+                text-decoration: none;
+                font-weight: bold;
+                font-size: 1.2em;
+                transition: 0.3s;
+            }
+
+                .footer-link a:hover {
+                    text-shadow: 0 0 10px #f1c40f;
+                }
+
+        /* الطباعة */
+        @media print {
+            .no-print, #loginOverlay, .btn-del, .btn-edit, .add-btns {
+                display: none !important;
+            }
+
+            body {
+                background: white !important;
+                color: black !important;
+            }
+
+            .container {
+                border: none !important;
+                padding: 0 !important;
+                width: 100% !important;
+                background: white !important;
+                box-shadow: none !important;
+            }
+
+            table {
+                border: 1px solid #000 !important;
+            }
+
+            th, td {
+                border: 1px solid #000 !important;
+                color: black !important;
+            }
+
+            body.print-schedule #students-section {
+                display: none !important;
+            }
+
+            body.print-list #schedule-section {
+                display: none !important;
+            }
+        }
+    </style>
+</head>
+<body onload="sortAndRefresh()">
+
+    <!-- شاشة الدخول -->
+    <div id="loginOverlay">
+        <div class="login-box">
+            <div style="font-size: 50px; margin-bottom: 10px;">🏛️</div>
+            <h2>ثانوية الزيانية</h2>
+            <p style="color: #bdc3c7; font-size: 14px; margin-bottom: 15px;">أدخل رمز الوصول للمتابعة</p>
+            <input type="password" id="passInput" class="login-input" placeholder="الرمز السري">
+            <p id="errorMsg">❌ الرمز غير صحيح، حاول مجدداً</p>
+            <button class="btn btn-print" style="width:100%" onclick="checkPass()">تأكيد الهوية</button>
+        </div>
+    </div>
+
+    <div id="mainContent" class="container">
+        <div class="controls-row no-print">
+            <div class="print-btns">
+                <button class="btn btn-print" onclick="printSchedule()">🖨️ طباعة الجدول</button>
+                <button class="btn btn-print" onclick="printList()">🖨️ طباعة القائمة</button>
+            </div>
+            <div class="add-btns">
+                <input type="text" id="newLastName" placeholder="اللقب" style="padding:10px; border-radius:5px; border:1px solid #f1c40f; background:transparent; color:#fff; outline:none;">
+                <input type="text" id="newFirstName" placeholder="الاسم" style="padding:10px; border-radius:5px; border:1px solid #f1c40f; background:transparent; color:#fff; outline:none;">
+                <button class="btn btn-add" onclick="addRow()">+ إضافة تلميذ</button>
+            </div>
+        </div>
+
+        <header>
+            <h1>ثانوية الزيانية</h1>
+            <div class="class-badge">القسم 1S1</div>
+        </header>
+
+        <div class="section" id="schedule-section">
+            <h2>📅 البرنامج الأسبوعي للحصص</h2>
+            <table>
+                <thead>
+                    <tr><th class="day-column">اليوم</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td class="day-column">الأحد</td><td>رياضيات</td><td>عربية</td><td>فرنسية</td><td>انجليزية</td><td>علوم</td><td>علوم</td><td>فيزياء</td><td>فيزياء</td></tr>
+                    <tr><td class="day-column">الاثنين</td><td>علوم</td><td>علوم</td><td>معلوماتية</td><td>تكنولوجيا</td><td>رياضيات</td><td>عربية</td><td>رياضة</td><td>رياضة</td></tr>
+                    <tr><td class="day-column">الثلاثاء</td><td>رياضيات</td><td>رياضيات</td><td>تاريخ</td><td>اسلامية</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>
+                    <tr><td class="day-column">الأربعاء</td><td>معلوماتية</td><td>جغرافيا</td><td>فيزياء</td><td>فيزياء</td><td>فرنسية</td><td>عربية</td><td>انجليزية</td><td>تكنولوجيا</td></tr>
+                    <tr><td class="day-column">الخميس</td><td>موسيقية</td><td>عربية</td><td>رياضيات</td><td>رياضيات</td><td>انجليزية</td><td>فرنسية</td><td>-</td><td>-</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="section" id="students-section">
+            <h2>👥 سجل تلاميذ قسم 1S1 الكامل</h2>
+            <table id="studentsTable">
+                <thead>
+                    <tr><th style="width: 10%;">ID</th><th>اللقب</th><th>الاسم</th><th class="no-print">إجراءات</th></tr>
+                </thead>
+                <tbody id="tableBody">
+                    <!-- القائمة الكاملة -->
+                    <tr><td></td><td>أوقوشيح</td><td>عيصام</td><td class="no-print"><button class="btn btn-edit" onclick="editRow(this)">تعديل</button><button class="btn btn-del" onclick="deleteRow(this)">حذف</button></td></tr>
+                    <tr><td></td><td>اولولو</td><td>امال</td><td class="no-print"><button class="btn btn-edit" onclick="editRow(this)">تعديل</button><button class="btn btn-del" onclick="deleteRow(this)">حذف</button></td></tr>
+                    <tr><td></td><td>عمرين</td><td>احلام</td><td class="no-print"><button class="btn btn-edit" onclick="editRow(this)">تعديل</button><button class="btn btn-del" onclick="deleteRow(this)">حذف</button></td></tr>
+                    <tr><td></td><td>سراي</td><td>رما</td><td class="no-print"><button class="btn btn-edit" onclick="editRow(this)">تعديل</button><button class="btn btn-del" onclick="deleteRow(this)">حذف</button></td></tr>
+                    <tr><td></td><td>عوداي</td><td>ساجد</td><td class="no-print"><button class="btn btn-edit" onclick="editRow(this)">تعديل</button><button class="btn btn-del" onclick="deleteRow(this)">حذف</button></td></tr>
+                    <tr><td></td><td>العربي</td><td>محمد امين</td><td class="no-print"><button class="btn btn-edit" onclick="editRow(this)">تعديل</button><button class="btn btn-del" onclick="deleteRow(this)">حذف</button></td></tr>
+                    <tr><td></td><td>سعيدي</td><td>اسراء</td><td class="no-print"><button class="btn btn-edit" onclick="editRow(this)">تعديل</button><button class="btn btn-del" onclick="deleteRow(this)">حذف</button></td></tr>
+                    <tr><td></td><td>عبد السلاماين</td><td>عبد الرحمان</td><td class="no-print"><button class="btn btn-edit" onclick="editRow(this)">تعديل</button><button class="btn btn-del" onclick="deleteRow(this)">حذف</button></td></tr>
+                    <tr><td></td><td>عبد السلاماين</td><td>نور الملاك</td><td class="no-print"><button class="btn btn-edit" onclick="editRow(this)">تعديل</button><button class="btn btn-del" onclick="deleteRow(this)">حذف</button></td></tr>
+                    <tr><td></td><td>خديجي</td><td>سامية</td><td class="no-print"><button class="btn btn-edit" onclick="editRow(this)">تعديل</button><button class="btn btn-del" onclick="deleteRow(this)">حذف</button></td></tr>
+                    <tr><td></td><td>يحي الشريف</td><td>محمد اسلام</td><td class="no-print"><button class="btn btn-edit" onclick="editRow(this)">تعديل</button><button class="btn btn-del" onclick="deleteRow(this)">حذف</button></td></tr>
+                    <tr><td></td><td>حمدين</td><td>مدينة</td><td class="no-print"><button class="btn btn-edit" onclick="editRow(this)">تعديل</button><button class="btn btn-del" onclick="deleteRow(this)">حذف</button></td></tr>
+                    <tr><td></td><td>شناوي</td><td>فريال</td><td class="no-print"><button class="btn btn-edit" onclick="editRow(this)">تعديل</button><button class="btn btn-del" onclick="deleteRow(this)">حذف</button></td></tr>
+                    <tr><td></td><td>سعيدي</td><td>خديجة</td><td class="no-print"><button class="btn btn-edit" onclick="editRow(this)">تعديل</button><button class="btn btn-del" onclick="deleteRow(this)">حذف</button></td></tr>
+                    <tr><td></td><td>لعزيز</td><td>اكرم محمد شريف</td><td class="no-print"><button class="btn btn-edit" onclick="editRow(this)">تعديل</button><button class="btn btn-del" onclick="deleteRow(this)">حذف</button></td></tr>
+                    <tr><td></td><td>بايهو</td><td>هاجر</td><td class="no-print"><button class="btn btn-edit" onclick="editRow(this)">تعديل</button><button class="btn btn-del" onclick="deleteRow(this)">حذف</button></td></tr>
+                    <tr><td></td><td>عيواز</td><td>مصطفى عبد اللألاه</td><td class="no-print"><button class="btn btn-edit" onclick="editRow(this)">تعديل</button><button class="btn btn-del" onclick="deleteRow(this)">حذف</button></td></tr>
+                    <tr><td></td><td>مخطور</td><td>اسحاق</td><td class="no-print"><button class="btn btn-edit" onclick="editRow(this)">تعديل</button><button class="btn btn-del" onclick="deleteRow(this)">حذف</button></td></tr>
+                    <tr><td></td><td>زايدا</td><td>عادل</td><td class="no-print"><button class="btn btn-edit" onclick="editRow(this)">تعديل</button><button class="btn btn-del" onclick="deleteRow(this)">حذف</button></td></tr>
+                    <tr><td></td><td>بال</td><td>مروان</td><td class="no-print"><button class="btn btn-edit" onclick="editRow(this)">تعديل</button><button class="btn btn-del" onclick="deleteRow(this)">حذف</button></td></tr>
+                    <tr><td></td><td>بوعمريرن</td><td>يحيى</td><td class="no-print"><button class="btn btn-edit" onclick="editRow(this)">تعديل</button><button class="btn btn-del" onclick="deleteRow(this)">حذف</button></td></tr>
+                    <tr><td></td><td>برجم</td><td>نوح</td><td class="no-print"><button class="btn btn-edit" onclick="editRow(this)">تعديل</button><button class="btn btn-del" onclick="deleteRow(this)">حذف</button></td></tr>
+                    <tr><td></td><td>بلماداني</td><td>ايوب</td><td class="no-print"><button class="btn btn-edit" onclick="editRow(this)">تعديل</button><button class="btn btn-del" onclick="deleteRow(this)">حذف</button></td></tr>
+                    <tr><td></td><td>اوزيدان</td><td>يسين</td><td class="no-print"><button class="btn btn-edit" onclick="editRow(this)">تعديل</button><button class="btn btn-del" onclick="deleteRow(this)">حذف</button></td></tr>
+                    <tr><td></td><td>بختي</td><td>ايمان</td><td class="no-print"><button class="btn btn-edit" onclick="editRow(this)">تعديل</button><button class="btn btn-del" onclick="deleteRow(this)">حذف</button></td></tr>
+                    <tr><td></td><td>سي عبد الله</td><td>منة</td><td class="no-print"><button class="btn btn-edit" onclick="editRow(this)">تعديل</button><button class="btn btn-del" onclick="deleteRow(this)">حذف</button></td></tr>
+                    <tr><td></td><td>بلال</td><td>مروان</td><td class="no-print"><button class="btn btn-edit" onclick="editRow(this)">تعديل</button><button class="btn btn-del" onclick="deleteRow(this)">حذف</button></td></tr>
+                    <tr><td></td><td>مشوش</td><td>علاء الدين</td><td class="no-print"><button class="btn btn-edit" onclick="editRow(this)">تعديل</button><button class="btn btn-del" onclick="deleteRow(this)">حذف</button></td></tr>
+                    <tr><td></td><td>تيتوامان</td><td>اسحاق</td><td class="no-print"><button class="btn btn-edit" onclick="editRow(this)">تعديل</button><button class="btn btn-del" onclick="deleteRow(this)">حذف</button></td></tr>
+                    <tr><td></td><td>قدم</td><td>محمد</td><td class="no-print"><button class="btn btn-edit" onclick="editRow(this)">تعديل</button><button class="btn btn-del" onclick="deleteRow(this)">حذف</button></td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- الرابط المُعاد -->
+        <div class="footer-link no-print">
+            <a href="https://education.gov.dz" target="_blank">🔗 رابط موقع فضاء أولياء التلاميذ</a>
+        </div>
+    </div>
+
+    <script>
+        const passInput = document.getElementById("passInput");
+        passInput.addEventListener("keypress", (e) => { if (e.key === "Enter") checkPass(); });
+
+        function checkPass() {
+            if (passInput.value === "1S1") {
+                document.getElementById("loginOverlay").style.display = "none";
+                document.getElementById("mainContent").style.display = "block";
+                sortAndRefresh();
+            } else {
+                document.getElementById("errorMsg").style.display = "block";
+                passInput.value = "";
+            }
+        }
+
+        function addRow() {
+            let ln = document.getElementById("newLastName").value;
+            let fn = document.getElementById("newFirstName").value;
+            if (!ln || !fn) return alert("أدخل البيانات!");
+            let table = document.getElementById("tableBody");
+            let row = table.insertRow();
+            row.innerHTML = `<td></td><td>${ln}</td><td>${fn}</td><td class="no-print"><button class="btn btn-edit" onclick="editRow(this)">تعديل</button><button class="btn btn-del" onclick="deleteRow(this)">حذف</button></td>`;
+            document.getElementById("newLastName").value = "";
+            document.getElementById("newFirstName").value = "";
+            sortAndRefresh();
+        }
+
+        function editRow(btn) {
+            let row = btn.closest('tr');
+            let lastName = row.cells[1].innerText;
+            let firstName = row.cells[2].innerText;
+            row.cells[1].innerHTML = `<input type="text" class="edit-input" value="${lastName}">`;
+            row.cells[2].innerHTML = `<input type="text" class="edit-input" value="${firstName}">`;
+            row.cells[3].innerHTML = `<button class="btn btn-save" onclick="saveRow(this)">حفظ</button>`;
+        }
+
+        function saveRow(btn) {
+            let row = btn.closest('tr');
+            let newLastName = row.cells[1].querySelector('input').value;
+            let newFirstName = row.cells[2].querySelector('input').value;
+            row.cells[1].innerText = newLastName;
+            row.cells[2].innerText = newFirstName;
+            row.cells[3].innerHTML = `<button class="btn btn-edit" onclick="editRow(this)">تعديل</button><button class="btn btn-del" onclick="deleteRow(this)">حذف</button>`;
+            sortAndRefresh();
+        }
+
+        function deleteRow(btn) {
+            if (confirm("حذف التلميذ؟")) { btn.closest('tr').remove(); sortAndRefresh(); }
+        }
+
+        function sortAndRefresh() {
+            let table = document.getElementById("tableBody");
+            let rows = Array.from(table.rows);
+            rows.sort((a, b) => a.cells[1].innerText.localeCompare(b.cells[1].innerText, 'ar'));
+            rows.forEach((row, index) => {
+                row.cells[0].innerText = index + 1;
+                table.appendChild(row);
+            });
+        }
+
+        function printSchedule() { document.body.classList.add('print-schedule'); document.body.classList.remove('print-list'); window.print(); }
+        function printList() { document.body.classList.add('print-list'); document.body.classList.remove('print-schedule'); window.print(); }
+    </script>
+</body>
+</html>
